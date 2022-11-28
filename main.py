@@ -24,16 +24,15 @@ fps = 60
 bpm = 240
 beats = 8
 instruments = 6
-# ################## -/ exchangeable variables
 
 b = beats
+boxes = []
 timer = pygame.time.Clock()
 clicked = [[-1 for _ in range(beats)] for _ in range(instruments)]
 playing = True
 active_length = 0
 active_beat = 1
 beat_changed = True
-boxes = []
 
 # ################## loading sounds
 hi_hat = mixer.Sound('sounds\hi hat.wav')
@@ -99,7 +98,22 @@ def draw_grid(clicks, beat):
                              [beat * ((WIDTH - 200) // beats) + 200, 0, ((WIDTH - 200) // beats), instruments * 100],
                              5, 3)
     return boxes
-# ############################################## -/ layout
+
+
+# ############################################## to the database
+def crt_db():
+    conn = sqlite3.connect("DataAnalytics_BeatMaker.db")
+    cursor = conn.cursor()
+    with conn:
+        cursor.execute("""CREATE TABLE IF NOT EXISTS BeatMaker 
+        (time numeric, fps integer, 
+        hi_hat integer, snare integer, kick integer, crash integer, clap integer, tom integer, 
+        beats integer)""")
+    for i in range(beats):
+        with conn:
+            cursor.execute(f"INSERT INTO BeatMaker VALUES (datetime('now'),{fps}, "
+                           f"{clicked[0][i]}, {clicked[1][i]}, {clicked[2][i]}, {clicked[3][i]}, "
+                           f"{clicked[4][i]}, {clicked[5][i]}, {b})")
 
 
 # ############################################## engine
@@ -132,21 +146,7 @@ while run:
                 active_beat = 0
                 beat_changed = True
     pygame.display.flip()
-# ############################################## -/ engine
 
-# ############################################## to the database
-conn = sqlite3.connect("MachineLearning_BeatMaker.db")
-cursor = conn.cursor()
-
-with conn:
-    cursor.execute("""CREATE TABLE IF NOT EXISTS BeatMaker 
-    (time numeric, fps integer, hi_hat integer, snare integer, kick integer, crash integer, clap integer, tom integer, 
-    beats integer)""")
-
-for i in range(beats):
-    with conn:
-        cursor.execute(f"INSERT INTO BeatMaker VALUES (datetime('now'),{fps}, "
-                       f"{clicked[0][i]}, {clicked[1][i]}, {clicked[2][i]}, {clicked[3][i]}, "
-                       f"{clicked[4][i]}, {clicked[5][i]}, {b})")
+crt_db()
 
 pygame.quit()
