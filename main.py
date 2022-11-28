@@ -33,6 +33,8 @@ playing = True
 active_length = 0
 active_beat = 1
 beat_changed = True
+db_data = "DataAnalytics_BeatMaker.db"
+db_machine = "MachineLearning_BeatMaker.db"
 
 # ################## loading sounds
 hi_hat = mixer.Sound('sounds\hi hat.wav')
@@ -59,6 +61,22 @@ def play_notes():
                 clap.play()
             if i == 5:
                 tom.play()
+
+
+# ############################################## to the database
+def crt_db():
+    conn = sqlite3.connect(db_data)
+    cursor = conn.cursor()
+    with conn:
+        cursor.execute("""CREATE TABLE IF NOT EXISTS BeatMaker 
+        (time numeric, fps integer, 
+        hi_hat integer, snare integer, kick integer, crash integer, clap integer, tom integer, 
+        beats integer)""")
+    for i in range(beats):
+        with conn:
+            cursor.execute(f"INSERT INTO BeatMaker VALUES (datetime('now'),{fps}, "
+                           f"{clicked[0][i]}, {clicked[1][i]}, {clicked[2][i]}, {clicked[3][i]}, "
+                           f"{clicked[4][i]}, {clicked[5][i]}, {b})")
 
 
 # ############################################## layout
@@ -100,22 +118,6 @@ def draw_grid(clicks, beat):
     return boxes
 
 
-# ############################################## to the database
-def crt_db():
-    conn = sqlite3.connect("DataAnalytics_BeatMaker.db")
-    cursor = conn.cursor()
-    with conn:
-        cursor.execute("""CREATE TABLE IF NOT EXISTS BeatMaker 
-        (time numeric, fps integer, 
-        hi_hat integer, snare integer, kick integer, crash integer, clap integer, tom integer, 
-        beats integer)""")
-    for i in range(beats):
-        with conn:
-            cursor.execute(f"INSERT INTO BeatMaker VALUES (datetime('now'),{fps}, "
-                           f"{clicked[0][i]}, {clicked[1][i]}, {clicked[2][i]}, {clicked[3][i]}, "
-                           f"{clicked[4][i]}, {clicked[5][i]}, {b})")
-
-
 # ############################################## engine
 run = True
 while run:
@@ -146,7 +148,5 @@ while run:
                 active_beat = 0
                 beat_changed = True
     pygame.display.flip()
-
-crt_db()
-
 pygame.quit()
+crt_db()
