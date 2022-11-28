@@ -25,8 +25,8 @@ bpm = 240
 beats = 8
 instruments = 6
 
-b = beats
 boxes = []
+beats_data = beats
 timer = pygame.time.Clock()
 clicked = [[-1 for _ in range(beats)] for _ in range(instruments)]
 playing = True
@@ -76,7 +76,7 @@ def crt_db():
         with conn:
             cursor.execute(f"INSERT INTO BeatMaker VALUES (datetime('now'),{fps}, "
                            f"{clicked[0][i]}, {clicked[1][i]}, {clicked[2][i]}, {clicked[3][i]}, "
-                           f"{clicked[4][i]}, {clicked[5][i]}, {b})")
+                           f"{clicked[4][i]}, {clicked[5][i]}, {beats_data})")
 
 
 # ############################################## layout
