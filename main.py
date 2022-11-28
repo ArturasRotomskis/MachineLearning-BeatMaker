@@ -22,7 +22,7 @@ label_font = pygame.font.Font('freesansbold.ttf', 14)
 # ################## exchangeable variables
 fps = 60
 bpm = 240
-beats = 8
+beats = 6
 instruments = 6
 
 boxes = []
