@@ -86,7 +86,7 @@ def draw_grid(clicks, beat):
     screen.blit(hi_hat_text, (15, 42))
     snare_text = label_font.render('Snare (solinis būgnas)', True, teal)
     screen.blit(snare_text, (15, 142))
-    kick_text = label_font.render('Kick (bosinis būgnas', True, teal)
+    kick_text = label_font.render('Kick (bosinis būgnas)', True, teal)
     screen.blit(kick_text, (15, 242))
     crash_text = label_font.render('Crash (crash būgnas)', True, teal)
     screen.blit(crash_text, (15, 342))
